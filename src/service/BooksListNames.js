@@ -1,7 +1,9 @@
 import api from "./index";
 
-export const ListNames = () => {
+const BooksListNames = (bookName) => {
   return api.get(
-    `svc/books/v3/lists/names.json?api-key=NmDjgi41PA8jqfavYKxjhHsSxLdNMtXs`
+    `/svc/books/v3/lists/current${bookName}.json?api-key=NmDjgi41PA8jqfavYKxjhHsSxLdNMtXs`
   );
 };
+
+export default BooksListNames;
