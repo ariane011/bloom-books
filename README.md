@@ -1,6 +1,6 @@
 ## :books: Bloom Books
 #### O Bloom Books é um projeto desenvolvido para um case de Front-End
-Aqui, é possível visualizar alguns dos genêros literários disponibilizados através da api do The New York Times
+Aqui, é possível visualizar e pesquisar por alguns genêros literários, disponibilizados através da api do The New York Times.
 
 ****
 
