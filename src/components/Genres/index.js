@@ -98,46 +98,32 @@ export const Genres = () => {
           pageSize: 5,
         }}
         dataSource={books}
-        extra={
-          search.query === ""
-            ? ""
-            : search.list.map((books) => {
-                return (
-                  <>
-                    <Link to={`/${books.list_name}`}>
-                      <List.Item
-                        key={books.list_name}
-                        style={
-                          btnLayout === "vertical"
-                            ? { display: "inline-block" }
-                            : { display: "flex" }
-                        }
-                      >
-                        <h2>{books.display_name}</h2>
-                        <p className="text-update">
-                          Atualizado em:{" "}
-                          {moment(books.newest_published_date).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </p>
-                        <p>
-                          Última publicação:{" "}
-                          {moment(books.newest_published_date).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </p>
-                        <p>
-                          Publicação mais antiga:{" "}
-                          {moment(books.oldest_published_date).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </p>
-                      </List.Item>
-                    </Link>
-                  </>
-                );
-              })
-        }
+        renderItem={(books) => (
+          <Link to={`/${books.list_name}`}>
+            <List.Item
+              key={books.list_name}
+              style={
+                btnLayout === "vertical"
+                  ? { display: "inline-block" }
+                  : { display: "flex" }
+              }
+            >
+              <h2>{books.display_name}</h2>
+              <p className="text-update">
+                Atualizado em:{" "}
+                {moment(books.newest_published_date).format("DD/MM/YYYY")}
+              </p>
+              <p>
+                Última publicação:{" "}
+                {moment(books.newest_published_date).format("DD/MM/YYYY")}
+              </p>
+              <p>
+                Publicação mais antiga:{" "}
+                {moment(books.oldest_published_date).format("DD/MM/YYYY")}
+              </p>
+            </List.Item>
+          </Link>
+        )}
       ></List>
     </Container>
   );
