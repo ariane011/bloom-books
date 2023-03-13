@@ -5,45 +5,58 @@ import Grid2 from "./../../assets/icons/grid2.svg";
 import Grid1Blue from "./../../assets/icons/grid1-blue.svg";
 import Grid2Blue from "./../../assets/icons/grid2-blue.svg";
 import moment from "moment";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import GenresList from "../../service/GenresList";
 import { List, message } from "antd";
-import { SearchGenres } from "../../service/Search";
 import { Search } from "../Search";
-import debounce from "lodash.debounce";
 
 export const Genres = () => {
   const [books, setBooks] = useState([]);
   const [btnLayout, setBtnLayout] = useState("horizontal");
   const [btnVertical, setBtnVertical] = useState(false);
   const [btnHorizontal, setBtnHorizonta] = useState(true);
-  const [search, setSearch] = useState("");
-  const bookName = useLocation();
+  const [search, setSearch] = useState({
+    query: "",
+    list: [],
+  });
+
+  const handleChange = (e) => {
+    const results = books.filter((book) => {
+      if (e.target.value === "") return books;
+      return book.list_name
+        .toLowerCase()
+        .includes(e.target.value.toLowerCase());
+    });
+    setSearch({
+      query: e.target.value,
+      list: results,
+    });
+  };
 
   useEffect(() => {
-    if (search.length !== 0) {
-      try {
-        SearchGenres(search).then((response) => {
-          const books = response.data;
-          setBooks(books.results);
-        });
-      } catch (error) {
-        message.error(
-          "Houve um erro ao fazer a requisição, tente novamente mais tarde."
-        );
-      }
-    } else {
+    try {
       GenresList().then((response) => {
         const books = response.data;
         setBooks(books.results);
       });
+    } catch (error) {
+      message.error(
+        "Houve um erro ao carregar as informações, tente novamente mais tarde"
+      );
     }
-  }, [bookName, search]);
+  }, []);
 
   return (
     <Container>
-      <Search onChange={debounce((e) => setSearch(e.target.value), 500)} />
+      <Search onChange={handleChange} value={search.query} />
       <StyledTitle>
+        {/* <ul>
+          {search.query === ""
+            ? ""
+            : search.list.map((books) => {
+                return <li key={books.list_name}>{books.list_name}</li>;
+              })}
+        </ul> */}
         <h1>Gêneros</h1>
         <div className="content-filter">
           <p>Exibir 5 por vez</p>
@@ -83,35 +96,48 @@ export const Genres = () => {
             console.log(page);
           },
           pageSize: 5,
-          total: books.num_results,
         }}
         dataSource={books}
-        renderItem={(books) => (
-          <Link to={`/${books.list_name}`}>
-            <List.Item
-              key={books.bookName}
-              style={
-                btnLayout === "vertical"
-                  ? { display: "inline-block" }
-                  : { display: "flex" }
-              }
-            >
-              <h2>{books.display_name}</h2>
-              <p className="text-update">
-                Atualizado em:{" "}
-                {moment(books.newest_published_date).format("DD/MM/YYYY")}
-              </p>
-              <p>
-                Última publicação:{" "}
-                {moment(books.newest_published_date).format("DD/MM/YYYY")}
-              </p>
-              <p>
-                Publicação mais antiga:{" "}
-                {moment(books.oldest_published_date).format("DD/MM/YYYY")}
-              </p>
-            </List.Item>
-          </Link>
-        )}
+        extra={
+          search.query === ""
+            ? ""
+            : search.list.map((books) => {
+                return (
+                  <>
+                    <Link to={`/${books.list_name}`}>
+                      <List.Item
+                        key={books.list_name}
+                        style={
+                          btnLayout === "vertical"
+                            ? { display: "inline-block" }
+                            : { display: "flex" }
+                        }
+                      >
+                        <h2>{books.display_name}</h2>
+                        <p className="text-update">
+                          Atualizado em:{" "}
+                          {moment(books.newest_published_date).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
+                        <p>
+                          Última publicação:{" "}
+                          {moment(books.newest_published_date).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
+                        <p>
+                          Publicação mais antiga:{" "}
+                          {moment(books.oldest_published_date).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </p>
+                      </List.Item>
+                    </Link>
+                  </>
+                );
+              })
+        }
       ></List>
     </Container>
   );
