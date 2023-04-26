@@ -7,7 +7,7 @@ import Grid2Blue from "./../../assets/icons/grid2-blue.svg";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import GenresList from "../../service/GenresList";
-import { List, message } from "antd";
+import { Card, List, message } from "antd";
 import { Search } from "../Search";
 
 export const Genres = () => {
@@ -46,17 +46,20 @@ export const Genres = () => {
     }
   }, []);
 
+  const renderItem = (data) =>
+    data.edges.map((item) => (
+      <List.Item>
+        <Card bordered={false} style={{ width: "100%" }}>
+          {item.node.name}
+        </Card>
+      </List.Item>
+    ));
+
   return (
     <Container>
       <Search onChange={handleChange} value={search.query} />
       <StyledTitle>
-        {/* <ul>
-          {search.query === ""
-            ? ""
-            : search.list.map((books) => {
-                return <li key={books.list_name}>{books.list_name}</li>;
-              })}
-        </ul> */}
+        <ul></ul>
         <h1>Gêneros</h1>
         <div className="content-filter">
           <p>Exibir 5 por vez</p>
@@ -97,32 +100,35 @@ export const Genres = () => {
           },
           pageSize: 5,
         }}
-        dataSource={books}
+        dataSource={search.query === "" ? books : search.list}
         renderItem={(books) => (
-          <Link to={`/${books.list_name}`}>
-            <List.Item
-              key={books.list_name}
-              style={
-                btnLayout === "vertical"
-                  ? { display: "inline-block" }
-                  : { display: "flex" }
-              }
-            >
-              <h2>{books.display_name}</h2>
-              <p className="text-update">
-                Atualizado em:{" "}
-                {moment(books.newest_published_date).format("DD/MM/YYYY")}
-              </p>
-              <p>
-                Última publicação:{" "}
-                {moment(books.newest_published_date).format("DD/MM/YYYY")}
-              </p>
-              <p>
-                Publicação mais antiga:{" "}
-                {moment(books.oldest_published_date).format("DD/MM/YYYY")}
-              </p>
-            </List.Item>
-          </Link>
+          <>
+            <Link to={`/${books.list_name}`}>
+              {console.log(books)}
+              <List.Item
+                key={books.list_name}
+                style={
+                  btnLayout === "vertical"
+                    ? { display: "inline-block" }
+                    : { display: "flex" }
+                }
+              >
+                <h2>{books.display_name}</h2>
+                <p className="text-update">
+                  Atualizado em:{" "}
+                  {moment(books.newest_published_date).format("DD/MM/YYYY")}
+                </p>
+                <p>
+                  Última publicação:{" "}
+                  {moment(books.newest_published_date).format("DD/MM/YYYY")}
+                </p>
+                <p>
+                  Publicação mais antiga:{" "}
+                  {moment(books.oldest_published_date).format("DD/MM/YYYY")}
+                </p>
+              </List.Item>
+            </Link>
+          </>
         )}
       ></List>
     </Container>
