@@ -7,31 +7,13 @@ import Grid2Blue from "./../../assets/icons/grid2-blue.svg";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import GenresList from "../../service/GenresList";
-import { Card, List, message } from "antd";
-import { Search } from "../Search";
+import { List, message } from "antd";
 
 export const Genres = () => {
   const [books, setBooks] = useState([]);
   const [btnLayout, setBtnLayout] = useState("horizontal");
   const [btnVertical, setBtnVertical] = useState(false);
   const [btnHorizontal, setBtnHorizonta] = useState(true);
-  const [search, setSearch] = useState({
-    query: "",
-    list: [],
-  });
-
-  const handleChange = (e) => {
-    const results = books.filter((book) => {
-      if (e.target.value === "") return books;
-      return book.list_name
-        .toLowerCase()
-        .includes(e.target.value.toLowerCase());
-    });
-    setSearch({
-      query: e.target.value,
-      list: results,
-    });
-  };
 
   useEffect(() => {
     try {
@@ -46,18 +28,8 @@ export const Genres = () => {
     }
   }, []);
 
-  const renderItem = (data) =>
-    data.edges.map((item) => (
-      <List.Item>
-        <Card bordered={false} style={{ width: "100%" }}>
-          {item.node.name}
-        </Card>
-      </List.Item>
-    ));
-
   return (
     <Container>
-      <Search onChange={handleChange} value={search.query} />
       <StyledTitle>
         <ul></ul>
         <h1>Gêneros</h1>
@@ -100,11 +72,11 @@ export const Genres = () => {
           },
           pageSize: 5,
         }}
-        dataSource={search.query === "" ? books : search.list}
+        // dataSource={search.query === "" ? books : search.list}
+        dataSource={books}
         renderItem={(books) => (
           <>
             <Link to={`/${books.list_name}`}>
-              {console.log(books)}
               <List.Item
                 key={books.list_name}
                 style={
