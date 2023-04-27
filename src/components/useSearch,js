@@ -1,0 +1,11 @@
+import React, { useState } from "react";
+
+const useSearchContext = React.createContext(null);
+
+export default function UseSearchComponent() {
+    const [search, setSearch] = useState({
+        query: "",
+        list: [],
+    });
+
+}
