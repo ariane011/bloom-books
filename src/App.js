@@ -1,12 +1,21 @@
+import { useState } from "react";
 import { Header } from "./components/Header";
+import UseSearchComponent from "./components/useSearch,js";
 // import "antd/dist/antd.min.css";
 import Routes from "./routes";
 
 function App() {
+  const [search, setSearch] = useState({
+    query: "",
+    list: [],
+  });
+
   return (
     <>
-      <Header />
-      <Routes />
+      <UseSearchComponent.Provider value={[search, setSearch]}>
+        <Header />
+        <Routes />
+      </UseSearchComponent.Provider>
     </>
   );
 }
